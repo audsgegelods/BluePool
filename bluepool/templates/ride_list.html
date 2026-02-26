@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for ride in ride_list %}
+    <li><a href="{{ ride.get_absolute_url }}">Ride No. {{ride.pk}} </a></li>
+{% endfor %}
+{% endblock %}
