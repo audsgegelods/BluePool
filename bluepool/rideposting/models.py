@@ -7,7 +7,7 @@ class Ride(models.Model):
         This creates a Ride model
     """
     time = models.DateTimeField(auto_now_add=True) #currently just setting the pickup time automatically to the current time gahaha
-    pick_up_location = models.TextField()
+    pick_up_location = models.TextField() #todo: once map integration is implemented, change this to location based
     drop_off_location = models.TextField()
     
     #to do: when profiles are implemented, add profile linking for both riders (many to one) and driver (one to one)
