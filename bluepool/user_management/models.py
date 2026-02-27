@@ -6,4 +6,4 @@ class Profile (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     fname = models.CharField(max_length=63)
     lname = models.CharField(max_length=63)
-    email = models.EmailField()
+    email_address = models.EmailField()
