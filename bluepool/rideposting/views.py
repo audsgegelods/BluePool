@@ -1,7 +1,9 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from .models import Ride
 from .forms import RideCreateForm
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+import googlemaps
+from django.conf import settings
+from django.views.generic import ListView, View, CreateView, UpdateView
 
 # Create your views here.
 class RideListView(ListView): 
@@ -15,13 +17,30 @@ class RideListView(ListView):
         context['ride_list'] = Ride.objects.all()
         return context
 
-class RideDetailView(DetailView):
+class RideView(View):
     #displays details of a specific ride
     model = Ride
     template_name = 'ride_detail.html'
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get(self, request, pk):
+        ride = Ride.objects.get(pk=pk)
+        
+        if ride.pick_up_location and ride.drop_off_location != None:
+            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
+            pick_up = gmaps.geocode(ride.pick_up_location)
+            drop_off = gmaps.geocode(ride.drop_off_location)
+        else:
+            pick_up = ""
+            drop_off = ""
+            
+        context = {
+            'ride':ride,
+            'pick_up':pick_up,
+            'drop_off':drop_off,
+        }
+        
+        return render(request, self.template_name, context)
+        
+
 
 class RideCreateView(CreateView):
     #creates a new ride
