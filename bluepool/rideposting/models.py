@@ -17,6 +17,8 @@ class Ride(models.Model):
     drop_off_lat = models.CharField(max_length=200,blank=True,null=True)
     drop_off_lng = models.CharField(max_length=200,blank=True,null=True)
     drop_off_id = models.CharField(max_length=200,blank=True,null=True)
+    
+    route = models.CharField(max_length=200,blank=True,null=True)
     #to do: when profiles are implemented, add profile linking for both riders (many to one) and driver (one to one)
     
     def get_absolute_url(self):

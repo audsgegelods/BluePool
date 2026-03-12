@@ -34,7 +34,19 @@ class RideView(View):
             drop_off_lat = ride.drop_off_lat
             drop_off_lng = ride.drop_off_lng
             drop_off_id = ride.drop_off_id
-            route = gmaps.directions((pick_up_lat,pick_up_lng), (drop_off_lat,drop_off_lng), mode="driving", units="metric")[0].get("overview_polyline",{}.get("points", {}))
+            route = ride.route
+            
+            midpoint = ((float(pick_up_lat)+float(drop_off_lat))*0.5, (float(pick_up_lng)+float(drop_off_lng))*0.5)
+            
+            # f = open("temp.jpg", 'wb')
+            # for chunk in gmaps.static_map(size=(400, 400),
+            #                    center=midpoint,
+            #                    zoom=13,
+            #                    path=route):
+            #     if chunk:
+            #         f.write(chunk)
+            # f.close()
+            
             label = "from db"
         
         elif ride.pick_up_location and ride.drop_off_location != None:
@@ -50,7 +62,7 @@ class RideView(View):
             drop_off_lng = drop_off.get('geometry', {}).get('location',{}).get('lng', None)
             drop_off_id = drop_off.get('place_id',{})
             
-            route = gmaps.directions((pick_up_lat,pick_up_lng), (drop_off_lat,drop_off_lng), mode="driving", units="metric")[0].get("overview_polyline",{}.get("points", {}))
+            route = gmaps.directions((pick_up_lat,pick_up_lng), (drop_off_lat,drop_off_lng), mode="driving", units="metric")[0].get("overview_polyline",{}).get("points",None)
             
             ride.pick_up_lat = pick_up_lat
             ride.pick_up_lng = pick_up_lng
@@ -59,6 +71,9 @@ class RideView(View):
             ride.drop_off_lat = drop_off_lat
             ride.drop_off_lng = drop_off_lng
             ride.drop_off_id = drop_off_id
+            
+            ride.route = route
+            
             label = "from api call"
             ride.save()
             
@@ -70,7 +85,9 @@ class RideView(View):
             drop_off_lat = ""
             drop_off_lng = ""
             drop_off_id = ""
+            
             route = ""
+            
             label = "its so over"
             
         context = {
