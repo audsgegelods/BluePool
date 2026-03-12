@@ -46,7 +46,7 @@ class RideView(LoginRequiredMixin, View):
             
         context = {
             'ride':ride,
-            'GOOGLE_API_KEY':GOOGLE_API_KEY
+            'GOOGLE_API_KEY':GOOGLE_API_KEY,
             'is_driver': is_driver,
             'pending_requests': pending_requests,
             'user_request': user_request,
