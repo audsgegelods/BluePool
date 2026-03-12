@@ -5,13 +5,15 @@
 <p>Pickup Time: <b>{{ride.time}}</b></p>
 <p>Pickup Location: <b>{{ride.pick_up_location}}</b></p>
 <p>Dropoff Location: <b>{{ride.drop_off_location}}</b></p>
-<p>Pickup Location (Google API): <b>({{pick_up_lat}}, {{pick_up_lng}})</b></p>
-<p>Pickup Location ID (Google API): <b>{{pick_up_id}}</b></p>
-<p>Dropoff Location (Google API): <b>({{drop_off_lat}}, {{drop_off_lng}})</b></p>
-<p>Dropoff Location ID (Google API): <b>{{drop_off_id}}</b></p>
 
-<br>
-<p>Route: <b>{{route}}</b></p>
-<br>
-<p>Status: <b>{{label}}</b></p>
+<iframe
+  width="600"
+  height="450"
+  style="border:0"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed/v1/directions?key={{ GOOGLE_API_KEY }}&origin={{ ride.pick_up_location }}&destination={{ ride.drop_off_location }}&mode=driving">
+</iframe>
+
 {% endblock %}

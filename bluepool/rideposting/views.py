@@ -21,85 +21,14 @@ class RideView(View):
     #displays details of a specific ride
     model = Ride
     template_name = 'ride_detail.html'
+    
     def get(self, request, pk):
         ride = Ride.objects.get(pk=pk)
-        
-        if ride.pick_up_lat and ride.pick_up_lng and ride.pick_up_lng and ride.drop_off_lat and ride.drop_off_location and ride.drop_off_id != None:
-            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
-            
-            pick_up_lat = ride.pick_up_lat
-            pick_up_lng = ride.pick_up_lng
-            pick_up_id = ride.pick_up_id
-            
-            drop_off_lat = ride.drop_off_lat
-            drop_off_lng = ride.drop_off_lng
-            drop_off_id = ride.drop_off_id
-            route = ride.route
-            
-            midpoint = ((float(pick_up_lat)+float(drop_off_lat))*0.5, (float(pick_up_lng)+float(drop_off_lng))*0.5)
-            
-            # f = open("temp.jpg", 'wb')
-            # for chunk in gmaps.static_map(size=(400, 400),
-            #                    center=midpoint,
-            #                    zoom=13,
-            #                    path=route):
-            #     if chunk:
-            #         f.write(chunk)
-            # f.close()
-            
-            label = "from db"
-        
-        elif ride.pick_up_location and ride.drop_off_location != None:
-            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
-            
-            pick_up = gmaps.geocode(ride.pick_up_location)[0]
-            pick_up_lat = pick_up.get('geometry', {}).get('location',{}).get('lat', None)
-            pick_up_lng = pick_up.get('geometry', {}).get('location',{}).get('lng', None)
-            pick_up_id = pick_up.get('place_id',{})
-            
-            drop_off = gmaps.geocode(ride.drop_off_location)[0]
-            drop_off_lat = drop_off.get('geometry', {}).get('location',{}).get('lat', None)
-            drop_off_lng = drop_off.get('geometry', {}).get('location',{}).get('lng', None)
-            drop_off_id = drop_off.get('place_id',{})
-            
-            route = gmaps.directions((pick_up_lat,pick_up_lng), (drop_off_lat,drop_off_lng), mode="driving", units="metric")[0].get("overview_polyline",{}).get("points",None)
-            
-            ride.pick_up_lat = pick_up_lat
-            ride.pick_up_lng = pick_up_lng
-            ride.pick_up_id = pick_up_id
-            
-            ride.drop_off_lat = drop_off_lat
-            ride.drop_off_lng = drop_off_lng
-            ride.drop_off_id = drop_off_id
-            
-            ride.route = route
-            
-            label = "from api call"
-            ride.save()
-            
-        else:
-            pick_up_lat = ""
-            pick_up_lng = ""
-            pick_up_id = ""
-            
-            drop_off_lat = ""
-            drop_off_lng = ""
-            drop_off_id = ""
-            
-            route = ""
-            
-            label = "its so over"
+        GOOGLE_API_KEY = settings.GOOGLE_API_KEY
             
         context = {
             'ride':ride,
-            'pick_up_lat':pick_up_lat,
-            'pick_up_lng':pick_up_lng,
-            'pick_up_id':pick_up_id,
-            'drop_off_lat':drop_off_lat,
-            'drop_off_lng':drop_off_lng,
-            'drop_off_id':drop_off_id,
-            'route':route,
-            'label':label
+            'GOOGLE_API_KEY':GOOGLE_API_KEY
         }
         
         return render(request, self.template_name, context)
