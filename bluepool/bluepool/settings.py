@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_management'
-    'rideposting',
+    'user_management',
+    'rideposting'
 ]
 
 MIDDLEWARE = [
@@ -123,6 +123,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
