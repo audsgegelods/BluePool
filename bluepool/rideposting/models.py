@@ -16,12 +16,15 @@ class Ride(models.Model):
     
     driver = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='driven_rides',
+        null=True
     )
 
     passengers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='RideRequest'
+        related_name='rides_as_passenger' 
     )
 
     def get_absolute_url(self):
