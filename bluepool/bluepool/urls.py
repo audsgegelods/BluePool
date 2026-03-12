@@ -21,9 +21,10 @@ from django.conf.urls.static import static
 
 from .views import homepage
 
+app_name = 'bluepool'
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', homepage, name='homepage'),
     path('account/', include('django.contrib.auth.urls')),
     path('profile/', include('user_management.urls', namespace='profile')),
-    path('', homepage, name='homepage')
 ]
