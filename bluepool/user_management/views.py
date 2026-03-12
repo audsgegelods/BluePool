@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from .models import Profile
 from django.views.generic.edit import UpdateView
-from django.core.exceptions import ValidationError
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, FormView
@@ -15,13 +14,6 @@ class ProfileCreateView(FormView):
     model = Profile
     template_name = 'profile-add.html'
     form_class = UserCreateForm
-
-    def clean_email(self):
-        data = self.cleaned_data['email']
-        if ("@student.ateneo.edu" not in data):
-            raise ValidationError("Must be valid student email")
-
-        return data
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
