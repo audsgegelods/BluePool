@@ -6,17 +6,11 @@ class Ride(models.Model):
     """
         This creates a Ride model
     """
-    time = models.DateTimeField() #currently just setting the pickup time automatically to the current time gahaha
+    pick_up_time = models.DateTimeField() #currently just setting the pickup time automatically to the current time gahaha
     pick_up_location = models.TextField() #todo: once map integration is implemented, change this to location based
     drop_off_location = models.TextField()
     
-    pick_up_lat = models.CharField(max_length=200,blank=True,null=True)
-    pick_up_lng = models.CharField(max_length=200,blank=True,null=True)
-    pick_up_id = models.CharField(max_length=200,blank=True,null=True)
-    
-    drop_off_lat = models.CharField(max_length=200,blank=True,null=True)
-    drop_off_lng = models.CharField(max_length=200,blank=True,null=True)
-    drop_off_id = models.CharField(max_length=200,blank=True,null=True)
+    route = models.CharField(max_length=200,blank=True,null=True)
     #to do: when profiles are implemented, add profile linking for both riders (many to one) and driver (one to one)
     
     def get_absolute_url(self):

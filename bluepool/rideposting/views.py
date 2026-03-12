@@ -7,80 +7,42 @@ from django.views.generic import ListView, View, CreateView, UpdateView
 
 # Create your views here.
 class RideListView(ListView): 
-    #displays all the rides in the ride_list
     model = Ride
     template_name = 'ride_list.html'
+    context_object_name = 'rides'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    #displays rides based on indicated conditions
+    def get_queryset(self):
+        rides = Ride.objects.all()
 
-        context['ride_list'] = Ride.objects.all()
-        return context
+        pick_up_loc = self.request.GET.get("pick_up_loc")
+        drop_off_loc = self.request.GET.get("drop_off_loc")
+        pick_up_time = self.request.GET.get("pick_up_time")
+
+        if pick_up_loc:
+            rides = rides.filter(pick_up_location=pick_up_loc)
+        if drop_off_loc:
+            rides = rides.filter(drop_off_location=drop_off_loc)
+        if pick_up_time:
+            rides = rides.filter(pick_up_time=pick_up_time)
+
+        return rides
 
 class RideView(View):
     #displays details of a specific ride
     model = Ride
     template_name = 'ride_detail.html'
+    
     def get(self, request, pk):
         ride = Ride.objects.get(pk=pk)
-        
-        if ride.pick_up_lat and ride.pick_up_lng and ride.pick_up_lng and ride.drop_off_lat and ride.drop_off_location and ride.drop_off_id != None:
-            pick_up_lat = ride.pick_up_lat
-            pick_up_lng = ride.pick_up_lng
-            pick_up_id = ride.pick_up_id
-            
-            drop_off_lat = ride.drop_off_lat
-            drop_off_lng = ride.drop_off_lng
-            drop_off_id = ride.drop_off_id
-            label = "from db"
-        
-        elif ride.pick_up_location and ride.drop_off_location != None:
-            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
-            
-            pick_up = gmaps.geocode(ride.pick_up_location)[0]
-            pick_up_lat = pick_up.get('geometry', {}).get('location',{}).get('lat', None)
-            pick_up_lng = pick_up.get('geometry', {}).get('location',{}).get('lng', None)
-            pick_up_id = pick_up.get('place_id',{})
-            
-            drop_off = gmaps.geocode(ride.drop_off_location)[0]
-            drop_off_lat = drop_off.get('geometry', {}).get('location',{}).get('lat', None)
-            drop_off_lng = drop_off.get('geometry', {}).get('location',{}).get('lng', None)
-            drop_off_id = drop_off.get('place_id',{})
-            
-            ride.pick_up_lat = pick_up_lat
-            ride.pick_up_lng = pick_up_lng
-            ride.pick_up_id = pick_up_id
-            
-            ride.drop_off_lat = drop_off_lat
-            ride.drop_off_lng = drop_off_lng
-            ride.drop_off_id = drop_off_id
-            label = "from api call"
-            ride.save()
-            
-        else:
-            pick_up_lat = ""
-            pick_up_lng = ""
-            pick_up_id = ""
-            
-            drop_off_lat = ""
-            drop_off_lng = ""
-            drop_off_id = ""
-            label = "its so over"
+        GOOGLE_API_KEY = settings.GOOGLE_API_KEY
             
         context = {
             'ride':ride,
-            'pick_up_lat':pick_up_lat,
-            'pick_up_lng':pick_up_lng,
-            'pick_up_id':pick_up_id,
-            'drop_off_lat':drop_off_lat,
-            'drop_off_lng':drop_off_lng,
-            'drop_off_id':drop_off_id,
-            'label':label
+            'GOOGLE_API_KEY':GOOGLE_API_KEY
         }
         
-        return render(request, self.template_name, context)
-        
-
+        return render(request, self.template_name, context)     
 
 class RideCreateView(CreateView):
     #creates a new ride
