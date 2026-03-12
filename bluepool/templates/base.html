@@ -1,2 +1,14 @@
-{% block title %}<title>Title</title>{% endblock %}
-{% block content %} {% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Blue Pool</title>
+	<body>
+		<a href="{% url 'homepage' %}" class="btn btn-primary">Home</a>
+		<a href="{% url 'admin:index' %}" class="btn btn-primary">Admin</a>
+		Logged in as: {{ user }}
+		{% block content %}
+        {% endblock %}
+	</body>
+</html>
