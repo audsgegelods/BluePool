@@ -24,8 +24,8 @@ from .views import homepage
 app_name = 'bluepool'
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('rideposting/', include('rideposting.urls', namespace='rideposting'))
+    path('rideposting/', include('rideposting.urls', namespace='rideposting')),
     path('', homepage, name='homepage'),
     path('account/', include('django.contrib.auth.urls')),
-    path('profile/', include('user_management.urls', namespace='profile')),
+    path('profile/', include('user_management.urls', namespace='profile'))
 ]
