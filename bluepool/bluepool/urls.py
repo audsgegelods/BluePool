@@ -23,6 +23,7 @@ from .views import homepage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/', include('django.contrib.auth.urls')),
     path('profile/', include('user_management.urls', namespace='profile')),
     path('', homepage, name='homepage')
 ]

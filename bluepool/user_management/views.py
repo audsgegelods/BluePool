@@ -35,7 +35,7 @@ class ProfileCreateView(FormView):
             name=form.cleaned_data['display_name'],
             email_address=form.cleaned_data['email']
         )
-        print('burger')
+        # print('burger')
         new_profile.save()
 
         return super(ProfileCreateView, self).form_valid(form)
