@@ -2,32 +2,41 @@
 
 {% block content %}
 
-<h2> Available Rides </h2>
 
-<form method="GET">
+<div class="container text-center pt-5">
+    <h2 style="color:white;"> Available Rides </h2>
 
-    <input type="text" name="pick_up_loc" placeholder="Pick-up location"
-        value="{{ request.GET.pick_up_loc }}">
+    <div class="row">
+        <div class="column">
+            <form method="GET">
 
-    <input type="text" name="drop_off_loc" placeholder="Drop-off location" 
-        value="{{ request.GET.drop_off_loc }}">
+                <input type="text" name="pick_up_loc" placeholder="Pick-up location"
+                    value="{{ request.GET.pick_up_loc }}">
 
-    <input type="datetime-local" name="pick_up_time" value="{{ request.GET.time }}">
+                <input type="text" name="drop_off_loc" placeholder="Drop-off location" 
+                    value="{{ request.GET.drop_off_loc }}">
 
-    <button type="submit">Filter</button>
+                <input type="datetime-local" name="pick_up_time" value="{{ request.GET.time }}">
 
-</form>
+                <button type="submit">Filter</button>
 
-{% for ride in rides %}
-<ul>
-    <li><h2 style="font-size: 18;">Ride {{ride.pk}}</h2>
-        <p style="font-size: 10;"><i>posted by [name]</i></p>
-        <p style="font-size: 14;">Pick-up point: {{ride.pick_up_location}}</p>
-        <p style="font-size: 14;">Drop-off point: {{ride.drop_off_location}}</p>
-        <p style="font-size: 14;">Pick-up time: {{ride.pick_up_time}}</p>
-        <a style="font-size: 14;" href="{{ ride.get_absolute_url }}">View Ride Details</a>
-    </li>
-</ul>
+            </form>
+        </div>
+        <div class="column">
+            <a href="{% url 'rideposting:ride_create' %}" class="btn btn-primary"> Create a Ride </a>
+        </div>
+            {% for ride in rides %}
+            <ul>
+                <li><h2 style="font-size: 18;">Ride {{ride.pk}}</h2>
+                    <p style="font-size: 10;"><i>posted by [name]</i></p>
+                    <p style="font-size: 14;">Pick-up point: {{ride.pick_up_location}}</p>
+                    <p style="font-size: 14;">Drop-off point: {{ride.drop_off_location}}</p>
+                    <p style="font-size: 14;">Pick-up time: {{ride.pick_up_time}}</p>
+                    <a style="font-size: 14;" href="{{ ride.get_absolute_url }}">View Ride Details</a>
+                </li>
+            </ul>
+    </div>
+</div>
 {% endfor %}
 
 {% endblock %}
