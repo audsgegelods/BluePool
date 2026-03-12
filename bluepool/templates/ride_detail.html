@@ -16,4 +16,45 @@
   src="https://www.google.com/maps/embed/v1/directions?key={{ GOOGLE_API_KEY }}&origin={{ ride.pick_up_location }}&destination={{ ride.drop_off_location }}&mode=driving">
 </iframe>
 
+{% if user.is_authenticated and not is_driver %}
+    {% if not user_request %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="join" class="btn btn-primary">Request to Join</button>
+        </form>
+    {% elif user_request.status == 'pending' %}
+        <p class="text-info">Your request is pending approval.</p>
+    {% elif user_request.status == 'accepted' %}
+        <p class="text-success">You have been accepted to this ride!</p>
+    {% elif user_request.status == 'rejected' %}
+        <p class="text-danger">Your request was rejected.</p>
+    {% endif %}
+{% endif %}
+
+{% if is_driver and pending_requests %}
+    <h3>Pending Requests</h3>
+    <ul>
+    {% for req in pending_requests %}
+        <li>
+            {{ req.passenger.username }} wants to join
+            <form method="post" action="{% url 'rideposting:handle_request' %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="request_id" value="{{ req.id }}">
+                <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">Accept</button>
+                <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+<h3>Passengers on board</h3>
+<ul>
+    {% for req in accepted_passengers %}
+        <li>{{ req.passenger.username }}</li>
+    {% empty %}
+        <li>No passengers yet.</li>
+    {% endfor %}
+</ul>
+
 {% endblock %}
