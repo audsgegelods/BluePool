@@ -25,6 +25,8 @@ class RideView(View):
         ride = Ride.objects.get(pk=pk)
         
         if ride.pick_up_lat and ride.pick_up_lng and ride.pick_up_lng and ride.drop_off_lat and ride.drop_off_location and ride.drop_off_id != None:
+            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
+            
             pick_up_lat = ride.pick_up_lat
             pick_up_lng = ride.pick_up_lng
             pick_up_id = ride.pick_up_id
@@ -32,6 +34,7 @@ class RideView(View):
             drop_off_lat = ride.drop_off_lat
             drop_off_lng = ride.drop_off_lng
             drop_off_id = ride.drop_off_id
+            route = gmaps.directions((pick_up_lat,pick_up_lng), (drop_off_lat,drop_off_lng), mode="driving", units="metric")[0].get("overview_polyline",{}.get("points", {}))
             label = "from db"
         
         elif ride.pick_up_location and ride.drop_off_location != None:
@@ -46,6 +49,8 @@ class RideView(View):
             drop_off_lat = drop_off.get('geometry', {}).get('location',{}).get('lat', None)
             drop_off_lng = drop_off.get('geometry', {}).get('location',{}).get('lng', None)
             drop_off_id = drop_off.get('place_id',{})
+            
+            route = gmaps.directions((pick_up_lat,pick_up_lng), (drop_off_lat,drop_off_lng), mode="driving", units="metric")[0].get("overview_polyline",{}.get("points", {}))
             
             ride.pick_up_lat = pick_up_lat
             ride.pick_up_lng = pick_up_lng
@@ -65,6 +70,7 @@ class RideView(View):
             drop_off_lat = ""
             drop_off_lng = ""
             drop_off_id = ""
+            route = ""
             label = "its so over"
             
         context = {
@@ -75,6 +81,7 @@ class RideView(View):
             'drop_off_lat':drop_off_lat,
             'drop_off_lng':drop_off_lng,
             'drop_off_id':drop_off_id,
+            'route':route,
             'label':label
         }
         
