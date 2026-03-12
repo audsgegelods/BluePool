@@ -23,7 +23,7 @@ class Ride(models.Model):
 
     passengers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        through='RideRequest'
+        through='RideRequest',
         related_name='rides_as_passenger' 
     )
 
