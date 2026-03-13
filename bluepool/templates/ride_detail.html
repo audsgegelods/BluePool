@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 <div style='color:white'>
 {% block content %}
-<h2> Ride {{ride.pk}} Information </h2>
-<p>Pickup Time: <b>{{ride.time}}</b></p>
-<p>Pickup Location: <b>{{ride.pick_up_location}}</b></p>
-<p>Dropoff Location: <b>{{ride.drop_off_location}}</b></p>
+<h2 style='color:white'> Ride {{ride.pk}} Information </h2>
+<p style='color:white'>Pickup Time: <b>{{ride.time}}</b></p>
+<p style='color:white'>Pickup Location: <b>{{ride.pick_up_location}}</b></p>
+<p style='color:white'>Dropoff Location: <b>{{ride.drop_off_location}}</b></p>
 
 <iframe
   width="600"
@@ -23,17 +23,17 @@
             <button type="submit" name="join" class="btn btn-primary">Request to Join</button>
         </form>
     {% elif user_request.status == 'pending' %}
-        <p class="text-info">Your request is pending approval.</p>
+        <p class="text-info" style='color:white'>Your request is pending approval.</p>
     {% elif user_request.status == 'accepted' %}
-        <p class="text-success">You have been accepted to this ride!</p>
+        <p class="text-success" style='color:white'>You have been accepted to this ride!</p>
     {% elif user_request.status == 'rejected' %}
-        <p class="text-danger">Your request was rejected.</p>
+        <p class="text-danger" style='color:white'>Your request was rejected.</p>
     {% endif %}
 {% endif %}
 
 {% if is_driver and pending_requests %}
-    <h3>Pending Requests</h3>
-    <ul>
+    <h3 style='color:white'>Pending Requests</h3>
+    <ul style='color:white'>
     {% for req in pending_requests %}
         <li>
             {{ req.passenger.username }} wants to join
@@ -48,8 +48,8 @@
     </ul>
 {% endif %}
 
-<h3>Passengers on board</h3>
-<ul>
+<h3 style='color:white'>Passengers on board</h3>
+<ul style='color:white'>
     {% for req in accepted_passengers %}
         <li>{{ req.passenger.username }}</li>
     {% empty %}
