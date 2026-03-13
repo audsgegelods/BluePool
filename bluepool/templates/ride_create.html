@@ -4,10 +4,10 @@
 {% block title %}Create Ride{% endblock %}
 {% block content %}
         <h1 style="color:white;">Create a New Ride:</h1>
-        <p style="color:white;">Please input time as m/d/y h:m</p>
         <form method="post" style="color:white;">
             {% csrf_token %}
             {{ form.as_p }}
+            <p style="color:white;">Please input time as m/d/y h:m</p>
             <button type="submit">Create New Ride</button>
         </form>
 {% endblock %}
