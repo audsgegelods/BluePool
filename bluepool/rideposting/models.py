@@ -7,6 +7,7 @@ class Ride(models.Model):
     """
         This creates a Ride model
     """
+    
     pick_up_time = models.DateTimeField() #currently just setting the pickup time automatically to the current time gahaha
     pick_up_location = models.TextField() #todo: once map integration is implemented, change this to location based
     drop_off_location = models.TextField()
