@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+<div style='color:white'>
 {% block content %}
 <h2> Ride {{ride.pk}} Information </h2>
 <p>Pickup Time: <b>{{ride.time}}</b></p>
@@ -56,5 +56,5 @@
         <li>No passengers yet.</li>
     {% endfor %}
 </ul>
-
+</div>
 {% endblock %}
