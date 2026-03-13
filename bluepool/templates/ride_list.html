@@ -7,7 +7,6 @@
     <h2 style="color:white;"> Available Rides </h2>
 
     <div class="row">
-        <div class="column">
             <form method="GET">
 
                 <input type="text" name="pick_up_loc" placeholder="Pick-up location"
@@ -22,10 +21,10 @@
 
             </form>
         </div>
-        <div class="column">
             <a href="{% url 'rideposting:ride_create' %}" class="btn btn-primary"> Create a Ride </a>
         </div>
             {% for ride in rides %}
+            <div class="container text-center">
             <ul style='color:white;'>
                 <li><h2 style="font-size: 18;">Ride {{ride.pk}}</h2>
                     <p style="font-size: 10;"><i>posted by {{ride.driver.username}}</i></p>
@@ -35,6 +34,7 @@
                     <a style="font-size: 14;" href="{{ ride.get_absolute_url }}">View Ride Details</a>
                 </li>
             </ul>
+            </div>
     </div>
 </div>
 {% endfor %}
