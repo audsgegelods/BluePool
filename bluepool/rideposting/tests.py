@@ -16,15 +16,24 @@ class TestRides(TestCase):
     #     rider = Profile.objects.create(user = self.userR, name = "rider", email_address = "ride@student.ateneo.edu")
     #     self.client = Client()
     
-    def test_ride_data(self):
+    def test_ride_pu_loc(self):
         time = timezone.now()
         ride = Ride.objects.create(pick_up_time = time, pick_up_location = 'UP Town Center', drop_off_location =  'Ateneo de Manila University')
         self.assertEqual(ride.pick_up_location, 'UP Town Center')
+
+    def test_ride_do_loc(self):
+        time = timezone.now()
+        ride = Ride.objects.create(pick_up_time = time, pick_up_location = 'UP Town Center', drop_off_location =  'Ateneo de Manila University')
         self.assertEqual(ride.drop_off_location, 'Ateneo de Manila University')
+
+    def test_ride_time(self):
+        time = timezone.now()
+        ride = Ride.objects.create(pick_up_time = time, pick_up_location = 'UP Town Center', drop_off_location =  'Ateneo de Manila University')
         self.assertEqual(ride.pick_up_time, time)
         
-    def test_API_key(self):
+    def test_valid_API_key(self):
         gmaps = googlemaps.Client(settings.GOOGLE_API_KEY)
         self.assertIsInstance(gmaps, googlemaps.Client)
 
+    def test_invalid_API_key(self):
         with self.assertRaisesMessage(ValueError, "Invalid API key provided."):googlemaps.Client('INVALID KEY')
