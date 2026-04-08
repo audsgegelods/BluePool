@@ -6,5 +6,5 @@ class RideCreateForm(forms.ModelForm):
         model = Ride
         fields = ['pick_up_location', 'drop_off_location', 'pick_up_time']
         widgets = {
-            #'time': forms.TextInput(attrs={'type': 'datetime-local'}),
+            'pick_up_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
