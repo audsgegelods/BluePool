@@ -32,7 +32,7 @@ class Ride(models.Model):
         return reverse('rideposting:ride_detail', args=[str(self.pk)])
 
 class Message(models.Model):
-    Ride = models.ForeignKey(
+    ride = models.ForeignKey(
         Ride, 
         on_delete=models.CASCADE,
         related_name='chat'
@@ -41,13 +41,16 @@ class Message(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='sender',
-        null=True
+        null = True
     )
     time = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=400)
 
     def __str__(self):
         return f"{self.author}: {self.text} (sent at {self.time})"
+    
+    class Meta:
+        ordering = ['-time']
 
 
 class RideRequest(models.Model):

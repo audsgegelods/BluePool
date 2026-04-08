@@ -1,7 +1,7 @@
 from django.contrib import messages 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Ride, RideRequest
+from .models import Ride, RideRequest, Message
 from .forms import RideCreateForm
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator      
@@ -53,6 +53,11 @@ class RideView(LoginRequiredMixin, View):
         except RideRequest.DoesNotExist:
             pass
 
+        try:
+            messages = Message.objects.get(ride=ride)
+        except RideRequest.DoesNotExist:
+            pass
+
         accepted_passengers = ride.requests.filter(status=RideRequest.ACCEPTED).select_related('passenger')
             
         context = {
@@ -62,6 +67,7 @@ class RideView(LoginRequiredMixin, View):
             'pending_requests': pending_requests,
             'user_request': user_request,
             'accepted_passengers': accepted_passengers,
+            'messages': messages,
         }
         
         return render(request, self.template_name, context)
