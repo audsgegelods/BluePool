@@ -47,10 +47,10 @@ class Message(models.Model):
     text = models.CharField(max_length=400)
 
     def __str__(self):
-        return f"{self.author}: {self.text} (sent at {self.time})"
+        return f"{self.author}: {self.text} (sent at {self.time.strftime('%H:%M)')}"
     
     class Meta:
-        ordering = ['-time']
+        ordering = ['time']
 
 
 class RideRequest(models.Model):

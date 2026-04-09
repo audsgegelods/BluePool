@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Ride, RideRequest, Message
-from .forms import RideCreateForm
+from .forms import RideCreateForm, MessageCreateForm
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator      
 import googlemaps
@@ -40,6 +40,7 @@ class RideView(LoginRequiredMixin, View):
     def get(self, request, pk):
         ride = get_object_or_404(Ride, pk=pk) 
         GOOGLE_API_KEY = settings.GOOGLE_API_KEY
+        form = MessageCreateForm()
 
         is_driver = (ride.driver == request.user)
 
@@ -54,11 +55,13 @@ class RideView(LoginRequiredMixin, View):
             pass
 
         try:
-            messages = Message.objects.get(ride=ride)
+            messages = ride.chat.all()
         except RideRequest.DoesNotExist:
             pass
 
         accepted_passengers = ride.requests.filter(status=RideRequest.ACCEPTED).select_related('passenger')
+        
+        selfUrl = request.path
             
         context = {
             'ride':ride,
@@ -68,23 +71,41 @@ class RideView(LoginRequiredMixin, View):
             'user_request': user_request,
             'accepted_passengers': accepted_passengers,
             'messages': messages,
+            'msgForm': form,
+            'page': selfUrl
         }
         
         return render(request, self.template_name, context)
     
     def post(self, request, pk):
         ride = get_object_or_404(Ride, pk=pk)
-        if 'join' in request.POST:
-            if ride.driver == request.user:
-                messages.error(request, "You cannot request your own ride.")
-                return redirect('rideposting:ride_detail', pk=ride.pk)
+        if request.method == 'POST':
+            if request.POST['form_id'] == 'apply':
+                if ride.driver == request.user:
+                    messages.error(request, "You cannot request your own ride.")
+                    return redirect('rideposting:ride_detail', pk=ride.pk)
 
-            RideRequest.objects.get_or_create(
-                ride=ride,
-                passenger=request.user,
-                defaults={'status': RideRequest.PENDING}
-            )
-            messages.success(request, "Your request to join has been sent.")
+                RideRequest.objects.get_or_create(
+                    ride=ride,
+                    passenger=request.user,
+                    defaults={'status': RideRequest.PENDING}
+                )
+                messages.success(request, "Your request to join has been sent.")
+                return redirect('rideposting:ride_detail', pk=ride.pk)
+            # elif request.htmx:
+            else:
+                form = MessageCreateForm(request.POST)
+                if form.is_valid:
+                    message = form.save(commit=False)
+                    message.author = request.user
+                    message.ride = ride
+                    message.save()
+                    formContext = {
+                        'message' : message,
+                        'user' : request.user,
+                    }
+                    return redirect('rideposting:ride_detail', pk=ride.pk)
+                    # return render(request, 'partials/chatbox_p.html', formContext)
         return redirect('rideposting:ride_detail', pk=ride.pk)
 
 class RideCreateView(LoginRequiredMixin, CreateView):
