@@ -6,6 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.urls import reverse
 from django.contrib.auth.models import User
+from rest_framework import generics
+from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Profile
 from .forms import ProfileForm, UserCreateForm
 
