@@ -15,7 +15,7 @@ function UserForm({route, method}) {
         e.preventDefault();
         
         try {
-            const res = await api.post(route, {username, password})
+            const res = await api.post(route, {username, email, password})
             if (method === "login") {
                 localStorage.setItem(ACCESS_TOKEN, res.data.access);
                 localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
@@ -42,13 +42,13 @@ function UserForm({route, method}) {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
         />
-        {/* <input 
+        <input 
             className="form-input"
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email Address"
-        /> */}
+        />
         <input 
             className="form-input"
             type="text"
