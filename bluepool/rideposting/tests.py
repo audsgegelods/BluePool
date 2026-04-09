@@ -84,5 +84,8 @@ class TestRides(TestCase):
         self.client.post("/rideposting/ride/add", {"pick_up_location": "UP Town Center", "drop_off_location" : "Ateneo de Manila University", "pick_up_time" : time})
         self.client.post("/rideposting/ride/1", {"form_id": "send", "text": 'Hello World', 'user': self.driver.user, 'ride': Ride.objects.get(id=1)})
         self.assertTrue(Message.objects.exists())
+        self.assertEqual(Message.objects.get(id=1).text, "Hello World")
+        self.assertEqual(Message.objects.get(id=1).author, self.driver.user)
+        self.assertEqual(Message.objects.get(id=1).ride, Ride.objects.get(id=1))
     
     # def test_
