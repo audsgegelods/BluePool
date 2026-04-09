@@ -58,3 +58,18 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('profile:profile', args=[self.get_object().pk])
         #return super(ProfileUpdateView, self).form_valid(form)
+
+
+class NewProfileCreateView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+    def form_valid(self, form):
+        form.save()
+        new_profile = Profile(
+            user=User.objects.get(username=form.cleaned_data['username']),
+            name=form.cleaned_data['display_name'],
+            email_address=form.cleaned_data['email']
+        )
+    

@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from user_management.views import NewProfileCreateView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .views import homepage
 
-app_name = 'bluepool'
 app_name = 'bluepool'
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +30,7 @@ urlpatterns = [
     path('', homepage, name='homepage'),
     path('account/', include('django.contrib.auth.urls')),
     path('profile/', include('user_management.urls', namespace='profile')),
-    path('rideposting/', include('rideposting.urls', namespace='rideposting'))
+    path('rideposting/', include('rideposting.urls', namespace='rideposting')),
+    # new authentication flow starting from here
+    path('user/', include('user_management.urls'), name='user')
 ]
