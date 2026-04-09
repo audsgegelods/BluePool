@@ -30,6 +30,9 @@ class Ride(models.Model):
 
     def get_absolute_url(self):
         return reverse('rideposting:ride_detail', args=[str(self.pk)])
+    
+    def add_message(self):
+        return reverse('rideposting:add_message', args=[str(self.pk)])
 
 class Message(models.Model):
     ride = models.ForeignKey(

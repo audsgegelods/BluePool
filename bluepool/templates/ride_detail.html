@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-<script src="htmx.min.js" defer></script>
 <div style='color:white'>
 {% block content %}
 <h2 style='color:white'> Ride {{ride.pk}} Information </h2>
@@ -60,16 +59,19 @@
 </ul>
 
 <h3 style='color:white'>Ride Chat</h3>
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</script>
 <div>
-    <ul id = 'chat' style='color:white'>
+    <ul id='chat' style='color:white'>
     {% for message in messages %}
     {% include 'chatbox.html' %}
     {% endfor %}
     </ul>
-    <form id="msgForm" hx-post="{{page}}" hx-target="#chat" hx-swap="beforeend" hx_boost="true" method="post">
+    <form method="POST" hx-post="{% url 'rideposting:ride_detail' ride.pk %}" hx-target="#chat" hx-swap="beforeend" hx-on="htmx:afterRequest: this.reset()">
         {% csrf_token %}
         <input type="hidden" name="form_id" value="send">
         {{msgForm}}
+        <button type="submit">Send</button>
     </form>
 </div>
 </div>

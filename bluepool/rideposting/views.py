@@ -6,6 +6,7 @@ from .forms import RideCreateForm, MessageCreateForm
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator      
 import googlemaps
+from django.http import HttpResponse
 from django.conf import settings
 from django.views.generic import ListView, View, CreateView, UpdateView
 
@@ -64,6 +65,7 @@ class RideView(LoginRequiredMixin, View):
         selfUrl = request.path
             
         context = {
+            'pk': pk,
             'ride':ride,
             'GOOGLE_API_KEY':GOOGLE_API_KEY,
             'is_driver': is_driver,
@@ -80,7 +82,23 @@ class RideView(LoginRequiredMixin, View):
     def post(self, request, pk):
         ride = get_object_or_404(Ride, pk=pk)
         if request.method == 'POST':
-            if request.POST['form_id'] == 'apply':
+            form_id = request.POST.get("form_id")
+            if form_id == "send":
+                form = MessageCreateForm(request.POST)
+                if form.is_valid():
+                    message = form.save(commit=False)
+                    message.author = request.user
+                    message.ride = get_object_or_404(Ride, pk=pk)
+                    message.save()
+
+                    if request.headers.get("HX-Request"):
+                        return render(request, 'partials/chatbox_p.html', {
+                            'message': message,
+                            'user': request.user,
+                        })
+                    else:
+                        return redirect('rideposting:ride_detail', pk=ride.pk)
+            elif form_id == 'apply':
                 if ride.driver == request.user:
                     messages.error(request, "You cannot request your own ride.")
                     return redirect('rideposting:ride_detail', pk=ride.pk)
@@ -92,21 +110,7 @@ class RideView(LoginRequiredMixin, View):
                 )
                 messages.success(request, "Your request to join has been sent.")
                 return redirect('rideposting:ride_detail', pk=ride.pk)
-            # elif request.htmx:
-            else:
-                form = MessageCreateForm(request.POST)
-                if form.is_valid:
-                    message = form.save(commit=False)
-                    message.author = request.user
-                    message.ride = ride
-                    message.save()
-                    formContext = {
-                        'message' : message,
-                        'user' : request.user,
-                    }
-                    return redirect('rideposting:ride_detail', pk=ride.pk)
-                    # return render(request, 'partials/chatbox_p.html', formContext)
-        return redirect('rideposting:ride_detail', pk=ride.pk)
+        return HttpResponse("Invalid request method", status=405)
 
 class RideCreateView(LoginRequiredMixin, CreateView):
     #creates a new ride
