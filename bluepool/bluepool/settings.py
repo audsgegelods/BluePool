@@ -72,8 +72,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware'
 ]
 
-CORS_ALLOWED_ORIGINS = [
-]
 
 ROOT_URLCONF = 'bluepool.urls'
 
@@ -149,5 +147,5 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-CORS_ALLOW_ALL_ORIGINA = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLWOS_CREDENTIALS = True
