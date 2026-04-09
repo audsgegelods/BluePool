@@ -3,7 +3,7 @@ import api from "../api"
 import { UNSAFE_NavigationContext, useNavigate } from "react-router-dom"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
 
-function UserForm({route, method}) {
+function RideForm({route, method}) {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -62,4 +62,4 @@ function UserForm({route, method}) {
     </form>
 }
 
-export default UserForm
+export default RideForm
