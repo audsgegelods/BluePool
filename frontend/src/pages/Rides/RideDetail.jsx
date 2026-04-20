@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import api from '../../api'
 import { ACCESS_TOKEN } from '../../constants'
+import ChatBox from '../../components/ChatBox'
+
 
 import Container from '@mui/material/Container'
 import Button from '@mui/material/Button'
@@ -35,8 +37,7 @@ function RideDetail() {
     const currentUserId = getUserIdFromToken()
 
     useEffect(() => {
-        fetchRide(),
-        fetchMessages()
+        fetchRide()
     }, [id])
 
     const fetchRide = async () => {
@@ -53,21 +54,6 @@ function RideDetail() {
         }
     }
 
-    const fetchMessages = async () => {
-        setLoading(true)
-        setError(null)
-        try {
-            const res = await api.get(`/rideposting/api/messages/`)
-            setMessages(res.data)
-        }
-        catch (err) {
-            console.error(err)
-            setError('Failed to load chat')
-        }
-        finally {
-            setLoading(false)
-        }
-    }
 
     const handleJoin = async () => {
         setActionLoading(true)
@@ -252,13 +238,10 @@ function RideDetail() {
                         )}
                     </>
                 )}
-                <div>
-                    {messsages.map((m) => (
-                        <ul>
-                            {m.text}
-                        </ul>
-                    ))}
-                </div>
+                
+                {/* chat */}
+                <ChatBox rideId={ride.id} currentUserId={currentUserId} />
+
                 <div style={{ marginTop: '24px', textAlign: 'center' }}>
                     <Button component={Link} to="/rides" variant="text" sx={{ color: 'white' }}>
                         ← Back to all rides

@@ -23,7 +23,6 @@ function RideForm({ route, onSuccess }) {
                 pick_up_location,
                 drop_off_location,
                 pick_up_time,
-                route: routeInfo
             } 
             await api.post(route, formData) 
             if (onSuccess) onSuccess() 
@@ -81,17 +80,6 @@ function RideForm({ route, onSuccess }) {
                             variant="outlined"
                             sx={{ bgcolor: "white", borderRadius: 1 }}
 
-                        />
-                        <TextField
-                            fullWidth
-                            name="route"
-                            label="Route / additional info"
-                            value={routeInfo}
-                            onChange={(e) => setRouteInfo(e.target.value)}
-                            multiline
-                            rows={3}
-                            variant="outlined"
-                            sx={{ bgcolor: "white", borderRadius: 1 }}
                         />
                         <Button variant="contained" type="submit" disabled={loading}>
                             {loading ? "Processing..." : "Create Ride"}
