@@ -2,8 +2,8 @@ from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .models import Ride, RideRequest
-from .serializers import RideSerializer, RideRequestSerializer
+from .models import Ride, RideRequest, Message
+from .serializers import RideSerializer, RideRequestSerializer, MessageSerializer
 from .forms import MessageCreateForm
 
 class RideListAPIView(generics.ListAPIView):
@@ -72,6 +72,15 @@ class JoinRideAPIView(APIView):
             return Response({'error': 'Request already exists'}, status=400)
     
         return Response({'status': 'pending'}, status=201)
+
+
+class MessagesAPIView(generics.ListAPIView):
+    serializer_class = MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Message.objects.all()
+        return queryset.order_by('time')
 
 class HandleRideRequestAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]

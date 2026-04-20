@@ -29,13 +29,14 @@ function RideDetail() {
     const [error, setError] = useState(null)
     const [actionLoading, setActionLoading] = useState(false)
 
-    const [messsages, setMessages] = useState(null)
+    const [messsages, setMessages] = useState([])
     const [messageForm, setMessageForm] = useState(null)
 
     const currentUserId = getUserIdFromToken()
 
     useEffect(() => {
-        fetchRide()
+        fetchRide(),
+        fetchMessages()
     }, [id])
 
     const fetchRide = async () => {
@@ -48,6 +49,22 @@ function RideDetail() {
             console.error(err)
             setError('Failed to load ride details.')
         } finally {
+            setLoading(false)
+        }
+    }
+
+    const fetchMessages = async () => {
+        setLoading(true)
+        setError(null)
+        try {
+            const res = await api.get(`/rideposting/api/messages/`)
+            setMessages(res.data)
+        }
+        catch (err) {
+            console.error(err)
+            setError('Failed to load chat')
+        }
+        finally {
             setLoading(false)
         }
     }
@@ -78,6 +95,8 @@ function RideDetail() {
             setActionLoading(false)
         }
     }
+
+
 
     if (loading) {
         return (
@@ -233,11 +252,21 @@ function RideDetail() {
                         )}
                     </>
                 )}
-
+                <div>
+                    {messsages.map((m) => (
+                        <ul>
+                            {m.text}
+                        </ul>
+                    ))}
+                </div>
                 <div style={{ marginTop: '24px', textAlign: 'center' }}>
                     <Button component={Link} to="/rides" variant="text" sx={{ color: 'white' }}>
                         ← Back to all rides
                     </Button>
+                </div>
+
+                <div>
+
                 </div>
             </Box>
         </Container>

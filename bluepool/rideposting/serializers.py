@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Ride, RideRequest
+from .models import Ride, RideRequest, Message
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -32,3 +32,8 @@ class RideSerializer(serializers.ModelSerializer):
     def get_accepted_passengers(self, obj):
         accepted = obj.requests.filter(status=RideRequest.ACCEPTED)
         return UserBriefSerializer([req.passenger for req in accepted], many=True).data
+    
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Message
+        fields = '__all__'
