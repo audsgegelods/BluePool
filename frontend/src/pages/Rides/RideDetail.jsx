@@ -107,6 +107,7 @@ function RideDetail() {
     const userRequest = ride.requests?.find(r => r.passenger?.id === currentUserId)
     const pendingRequests = ride.requests?.filter(r => r.status === 'pending') || []
     const acceptedPassengers = ride.accepted_passengers || []
+    const canChat = isDriver || acceptedPassengers.some(p => p.id === currentUserId);
 
     const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || ''
     const mapsEmbedUrl = GOOGLE_API_KEY
@@ -239,7 +240,7 @@ function RideDetail() {
                 )}
                 
                 {/* chat */}
-                <ChatBox rideId={ride.id} currentUserId={currentUserId} />
+                {canChat && <ChatBox rideId={ride.id} currentUserId={currentUserId} />}
 
                 <div style={{ marginTop: '24px', textAlign: 'center' }}>
                     <Button component={Link} to="/rides" variant="text" sx={{ color: 'white' }}>

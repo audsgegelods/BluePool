@@ -104,12 +104,20 @@ class MessagesAPIView(generics.ListCreateAPIView):
     #     queryset = Message.objects.all()
     #     return queryset.order_by('time')
 
-    def get_queryset(self):
+    def get_ride_permission(self):
         ride_id = self.kwargs.get('ride_id')
-        return Message.objects.filter(ride_id=ride_id).order_by('time')
+        ride = get_object_or_404(Ride, pk=ride_id)
+        user = self.request.user
+
+        if ride.driver == user:
+            return ride
+
+    def get_queryset(self):
+        ride = self.get_ride_permission()
+        return Message.objects.filter(ride=ride).order_by('time')
 
     def perform_create(self, serializer):
-        ride = get_object_or_404(Ride, pk=self.kwargs.get('ride_id'))
+        ride = self.get_ride_permission()
         serializer.save(author=self.request.user, ride=ride)
 
 class HandleRideRequestAPIView(APIView):
