@@ -133,7 +133,6 @@ function RideDetail() {
                     <p><strong>Pickup Time:</strong> {new Date(ride.pick_up_time).toLocaleString()}</p>
                     <p><strong>Pickup Location:</strong> {ride.pick_up_location}</p>
                     <p><strong>Dropoff Location:</strong> {ride.drop_off_location}</p>
-                    <p><strong>Route info:</strong> {ride.route || 'Not specified'}</p>
                 </div>
 
                 {/* Google Maps */}

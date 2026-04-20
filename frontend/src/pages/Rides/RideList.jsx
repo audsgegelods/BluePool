@@ -120,9 +120,6 @@ function RideList() {
                                     <p style={{ margin: '4px 0', fontSize: '0.875rem', color: '#ccc' }}>
                                         Driver: {ride.driver?.username || "Unknown"}
                                     </p>
-                                    <p style={{ margin: '4px 0 12px 0', fontSize: '0.875rem', color: '#ccc' }}>
-                                        Route: {ride.route || "Not specified"}
-                                    </p>
                                     <Button
                                         variant="outlined"
                                         size="small"

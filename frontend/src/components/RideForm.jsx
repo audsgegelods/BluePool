@@ -10,8 +10,7 @@ import Box from '@mui/material/Box'
 function RideForm({ route, onSuccess }) {
     const [pick_up_location, setPickUpLocation] = useState("") 
     const [drop_off_location, setDropOffLocation] = useState("") 
-    const [pick_up_time, setPickUpTime] = useState("") 
-    const [routeInfo, setRouteInfo] = useState("") 
+    const [pick_up_time, setPickUpTime] = useState("")
     const [loading, setLoading] = useState(false) 
 
     const handleSubmit = async (e) => {
