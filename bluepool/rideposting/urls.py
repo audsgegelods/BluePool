@@ -16,7 +16,7 @@ urlpatterns= [
     path('api/ride/<int:pk>/', api_views.RideRetrieveUpdateDestroyAPIView.as_view(), name='api_ride_detail'),
     path('api/ride/<int:pk>/join/', api_views.JoinRideAPIView.as_view(), name='api_ride_join'),
     path('api/handle-request/', api_views.HandleRideRequestAPIView.as_view(), name='api_handle_request'),
-    path('api/messages/', api_views.MessagesAPIView.as_view(), name='api_messages'),
+    path('api/ride/<int:ride_id>/messages/', api_views.MessagesAPIView.as_view(), name='api_messages'),
 ]
 
 app_name = "rideposting"

@@ -34,6 +34,8 @@ class RideSerializer(serializers.ModelSerializer):
         return UserBriefSerializer([req.passenger for req in accepted], many=True).data
     
 class MessageSerializer(serializers.ModelSerializer):
+    author = UserBriefSerializer(read_only=True)
+
     class Meta:
         model= Message
-        fields = '__all__'
+        fields = ['id', 'author', 'text', 'time']
