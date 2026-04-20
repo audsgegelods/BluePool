@@ -4,3 +4,5 @@ djangorestframework-simplejwt
 PyJWT
 pytz
 psycopg2-binary
+googlemaps
+django_htmx
