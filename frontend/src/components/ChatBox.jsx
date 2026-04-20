@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import api from '../api'
+
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
@@ -43,9 +44,11 @@ function ChatBox({ rideId, currentUserId }) {
             })
             setMessages([...messages, res.data])
             setNewMessage('')
-        } catch (err) {
+        } 
+        catch (err) {
             alert('Failed to send message')
-        } finally {
+        } 
+        finally {
             setSending(false)
         }
     }
@@ -60,24 +63,34 @@ function ChatBox({ rideId, currentUserId }) {
 
     return (
         <Box sx={{ mt: 3 }}>
-            <p style={{ color: '#ffffff' }}>Chat</p>
+            <h3 style={{ color: 'white', marginBottom: '12px' }}>Chat</h3>
             <Box sx={{
                 backgroundColor: '#1a2a4a',
+                borderRadius: '4px',
+                padding: '12px',
+                maxHeight: '300px',
+                overflowY: 'auto',
+                mb: 2
             }}>
                 {messages.length === 0 ? (
                     <p style={{ color: '#ffffff', textAlign: 'center' }}>No messages yet.</p>
                 ) : (
                     messages.map((msg) => (
                         <div key={msg.id} style={{
+                            marginBottom: '12px',
                             textAlign: msg.author?.id === currentUserId ? 'right' : 'left'
                         }}>
                             <div style={{
-                                display: 'inline-block'
+                                display: 'inline-block',
+                                backgroundColor: msg.author?.id === currentUserId ? '#0a1a3a' : '#2a3a5a',
+                                padding: '8px 12px',
+                                borderRadius: '12px',
+                                maxWidth: '80%'
                             }}>
-                                <small style={{ color: '#ffffff', fontSize: '0.7rem' }}>
+                                <small style={{ color: '#aaa', fontSize: '0.7rem' }}>
                                     {msg.author?.username || 'Unknown'} • {new Date(msg.time).toLocaleTimeString()}
                                 </small>
-                                <p style={{ color: 'white' }}>{msg.text}</p>
+                                <p style={{ margin: '4px 0 0', color: 'white' }}>{msg.text}</p>
                             </div>
                         </div>
                     ))
@@ -95,9 +108,10 @@ function ChatBox({ rideId, currentUserId }) {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         disabled={sending}
-                        sx={{ bgcolor: 'white' }}
+                        sx={{ bgcolor: 'white', borderRadius: 1 }}
                     />
-                    <Button type="submit" variant="contained" disabled={sending || !newMessage.trim()}>
+                    <Button type="submit" variant="contained" disabled={sending || !newMessage.trim()}
+                        sx={{ color: 'white', '&.Mui-disabled': { color: '#2a3a5a' } }}>
                         Send
                     </Button>
                 </Stack>
