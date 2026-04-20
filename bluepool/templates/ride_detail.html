@@ -20,6 +20,7 @@
     {% if not user_request %}
         <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="form_id" value="apply">
             <button type="submit" name="join" class="btn btn-primary">Request to Join</button>
         </form>
     {% elif user_request.status == 'pending' %}
@@ -56,5 +57,22 @@
         <li>No passengers yet.</li>
     {% endfor %}
 </ul>
+
+<h3 style='color:white'>Ride Chat</h3>
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</script>
+<div>
+    <ul id='chat' style='color:white'>
+    {% for message in messages %}
+    {% include 'chatbox.html' %}
+    {% endfor %}
+    </ul>
+    <form method="POST" hx-post="{% url 'rideposting:ride_detail' ride.pk %}" hx-target="#chat" hx-swap="beforeend" hx-on="htmx:afterRequest: this.reset()">
+        {% csrf_token %}
+        <input type="hidden" name="form_id" value="send">
+        {{msgForm}}
+        <button type="submit">Send</button>
+    </form>
+</div>
 </div>
 {% endblock %}
