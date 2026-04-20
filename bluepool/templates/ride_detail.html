@@ -13,7 +13,7 @@
   loading="lazy"
   allowfullscreen
   referrerpolicy="no-referrer-when-downgrade"
-  src="https://www.google.com/maps/embed/v1/directions?key={{ GOOGLE_API_KEY }}&origin={{ ride.pick_up_location }}&destination={{ ride.drop_off_location }}&mode=driving">
+  src="https://www.google.com/maps/embed/v1/directions?key={{ GOOGLE_API_KEY }}&origin={{ ride.pick_up_location|urlencode }}&destination={{ ride.drop_off_location|urlencode }}&mode=driving">
 </iframe>
 
 {% if user.is_authenticated and not is_driver %}

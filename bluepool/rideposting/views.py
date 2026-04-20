@@ -88,7 +88,32 @@ class RideCreateView(LoginRequiredMixin, CreateView):
     template_name = 'ride_create.html'
 
     def form_valid(self, form):
+        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         form.instance.driver = self.request.user
+        pick_up = gmaps.find_place(form.instance.pick_up_location, input_type="textquery")
+        pick_up_place = gmaps.place(pick_up.get("candidates",{})[0].get("place_id", None))
+        drop_off = gmaps.find_place(form.instance.drop_off_location, input_type="textquery")
+        drop_off_place = gmaps.place(drop_off.get("candidates",{})[0].get("place_id", None))
+        
+        ride = form.save(commit=False)
+        pick_up_parts = [pick_up_place["result"]["name"],pick_up_place["result"]["formatted_address"]]
+        drop_off_parts = [drop_off_place["result"]["name"],drop_off_place["result"]["formatted_address"]]
+        
+        if pick_up_parts[0] == None:
+            pick_up_parts[0] = form.instance.pick_up_location.title()
+        if drop_off_parts[0] == None:
+            drop_off_parts[0] = form.instance.drop_off_location.title()
+        
+        pick_up_result = pick_up_parts[0] + ", " + pick_up_parts[1]
+        drop_off_result = drop_off_parts[0] + ", " + drop_off_parts[1]
+        
+        form.instance.pick_up_location = pick_up_result
+        form.instance.drop_off_location = drop_off_result
+        
+        result = gmaps.distance_matrix(pick_up_result, drop_off_result, mode="driving")
+        
+        final = result.get("rows", [])[0].get("elements", [])[0].get("duration", {}).get("text", None)
+        ride.route = final
         return super().form_valid(form)
     
 class RideUpdateView(UpdateView):
