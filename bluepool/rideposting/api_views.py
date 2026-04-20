@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Ride, RideRequest
 from .serializers import RideSerializer, RideRequestSerializer
+from .forms import MessageCreateForm
 
 class RideListAPIView(generics.ListAPIView):
     serializer_class = RideSerializer
@@ -39,8 +40,28 @@ class RideRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 class JoinRideAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request):
+        form = MessageCreateForm()
+        return Response(form)
+
     def post(self, request, pk):
         ride = get_object_or_404(Ride, pk=pk)
+        if request.method == 'POST':
+            form_id = request.POST.get("form_id")
+            if form_id == "send":
+                form = MessageCreateForm(request.POST)
+                if form.is_valid():
+                    message = form.save(commit=False)
+                    message.author = request.user
+                    message.ride = get_object_or_404(Ride, pk=pk)
+                    message.save()
+
+                    if request.headers.get("HX-Request"):
+                        return Response(request, {
+                            'message': message,
+                            'user': request.user,
+                        })
+                    
         if ride.driver == request.user:
             return Response({'error': 'You cannot join your own ride'}, status=400)
         req, created = RideRequest.objects.get_or_create(
@@ -49,6 +70,7 @@ class JoinRideAPIView(APIView):
         )
         if not created:
             return Response({'error': 'Request already exists'}, status=400)
+    
         return Response({'status': 'pending'}, status=201)
 
 class HandleRideRequestAPIView(APIView):

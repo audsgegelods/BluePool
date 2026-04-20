@@ -29,6 +29,9 @@ function RideDetail() {
     const [error, setError] = useState(null)
     const [actionLoading, setActionLoading] = useState(false)
 
+    const [messsages, setMessages] = useState(null)
+    const [messageForm, setMessageForm] = useState(null)
+
     const currentUserId = getUserIdFromToken()
 
     useEffect(() => {
