@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
-from rideposting.models import Ride
+from rideposting.models import Ride, RideRequest
 from rideposting.forms import RideCreateForm
 from user_management.models import Profile
 import googlemaps
@@ -127,7 +127,7 @@ class TestRideRequestFunctionality(TestCase):
         self.client = Client()
         self.time = timezone.now()
 
-        def post_ride(self, pick_up, drop_off):
+        def post_ride(pick_up, drop_off):
             return self.client.post("/rideposting/ride/add",{"pick_up_location": pick_up, "drop_off_location": drop_off, "pick_up_time": self.time,})
 
         self.driver_user = User.objects.create_user(
@@ -149,17 +149,55 @@ class TestRideRequestFunctionality(TestCase):
         
         self.client.force_login(self.driver_user)
         post_ride("SM North EDSA", "Ateneo de Manila University")
-        
-        self.ride1 = Ride.objects.get(driver=self.driver_user)
         self.client.logout()
         
         self.client.force_login(self.rider_user)
         post_ride("Zu's Coffee", "Ateneo de Manila University")
-        
-        self.ride2 = Ride.objects.get(driver=self.rider_user)
         self.client.logout()
         
+        self.ride1 = Ride.objects.get(driver=self.driver_user)
+        self.ride2 = Ride.objects.get(driver=self.rider_user)
+        
     def test_user_can_request_to_join(self):
+        self.client.force_login(self.driver_user)
+        ride_url = "/rideposting/ride/" + str(self.ride2.id)
+        # self.client.post(ride_url, {"form_id": "apply"})
+        self.client.post(ride_url, {"join": ""})
+        self.assertTrue(RideRequest.objects.count(), 1)
+        self.client.logout()
+        
         self.client.force_login(self.rider_user)
-        ride_url = "/rideposting/ride/" + self.ride2.id
-        self.client.post(ride_url, )
+        ride_url = "/rideposting/ride/" + str(self.ride1.id)
+        # self.client.post(ride_url, {"form_id": "apply"})
+        self.client.post(ride_url, {"join": ""})
+        self.assertEqual(RideRequest.objects.count(), 2)
+        
+    def test_user_cannot_request_own_ride(self):
+        self.client.force_login(self.driver_user)
+        ride_url = "/rideposting/ride/" + str(self.ride1.id)
+        # self.client.post(ride_url, {"form_id": "apply"})
+        self.client.post(ride_url, {"join": ""})
+        self.assertFalse(RideRequest.objects.exists())
+        
+    def test_unauthenticated_user_cannot_request_ride(self):
+        ride_url = "/rideposting/ride/" + str(self.ride1.id)
+        # response = self.client.post(ride_url, {"form_id": "apply"})
+        response = self.client.post(ride_url, {"join": ""})
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(RideRequest.objects.exists())
+        
+    # def test_valid_message_form(self):
+    #     form = MessageCreateForm(data = {
+    #         'text': 'Hello World'
+    #     })
+    #     self.assertTrue(form.is_valid())
+    
+    # def test_post_message(self):
+    #     time = timezone.now()
+    #     self.client.post("/account/login/", {"username": "drive", "password" : "poster"})
+    #     self.client.post("/rideposting/ride/add", {"pick_up_location": "UP Town Center", "drop_off_location" : "Ateneo de Manila University", "pick_up_time" : time})
+    #     self.client.post("/rideposting/ride/1", {"form_id": "send", "text": 'Hello World', 'user': self.driver.user, 'ride': Ride.objects.get(id=1)})
+    #     self.assertTrue(Message.objects.exists())
+    #     self.assertEqual(Message.objects.get(id=1).text, "Hello World")
+    #     self.assertEqual(Message.objects.get(id=1).author, self.driver.user)
