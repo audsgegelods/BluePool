@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Ride, RideRequest
+import googlemaps
+from django.conf import settings
 from .serializers import RideSerializer, RideRequestSerializer
 
 class RideListAPIView(generics.ListAPIView):
@@ -29,7 +31,27 @@ class RideCreateAPIView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(driver=self.request.user)
+        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        pick_up = gmaps.find_place(serializer.validated_data['pick_up_location'], input_type="textquery")
+        pick_up_place = gmaps.place(pick_up.get("candidates",{})[0].get("place_id", None))
+        drop_off = gmaps.find_place(serializer.validated_data['drop_off_location'], input_type="textquery")
+        drop_off_place = gmaps.place(drop_off.get("candidates",{})[0].get("place_id", None))
+        
+        pick_up_parts = [pick_up_place["result"]["name"],pick_up_place["result"]["formatted_address"]]
+        drop_off_parts = [drop_off_place["result"]["name"],drop_off_place["result"]["formatted_address"]]
+        
+        if pick_up_parts[0] == None:
+            pick_up_parts[0] = serializer.validated_data['pick_up_location'].title()
+        if drop_off_parts[0] == None:
+            drop_off_parts[0] = serializer.validated_data['drop_off_location'].title()
+        
+        pick_up_result = pick_up_parts[0] + ", " + pick_up_parts[1]
+        drop_off_result = drop_off_parts[0] + ", " + drop_off_parts[1]
+        
+        result = gmaps.distance_matrix(pick_up_result, drop_off_result, mode="driving")
+        
+        final = result.get("rows", [])[0].get("elements", [])[0].get("duration", {}).get("text", None)
+        serializer.save(route=final, pick_up_location=pick_up_result, drop_off_location=drop_off_result, driver=self.request.user)
 
 class RideRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ride.objects.all()
