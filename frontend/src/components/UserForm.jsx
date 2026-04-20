@@ -76,6 +76,7 @@ function UserForm({route, method}) {
                             variant="outlined"
                             className="form-input"
                             type="text"
+                            autoComplete="off"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Username"
@@ -85,7 +86,8 @@ function UserForm({route, method}) {
                             fullWidth
                             variant="outlined"
                             className="form-input"
-                            type="text"
+                            type="password"
+                            autoComplete="new-password" 
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
@@ -102,6 +104,7 @@ function UserForm({route, method}) {
                             variant="outlined"
                             className="form-input"
                             type="text"
+                            autoComplete="off"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             placeholder="First Name"
@@ -112,6 +115,7 @@ function UserForm({route, method}) {
                             variant="outlined"
                             className="form-input"
                             type="text"
+                            autoComplete="off"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             placeholder="Last Name"
@@ -122,6 +126,7 @@ function UserForm({route, method}) {
                             variant="outlined"
                             className="form-input"
                             type="text"
+                            autoComplete="off"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Username"
@@ -132,6 +137,7 @@ function UserForm({route, method}) {
                             variant="outlined"
                             className="form-input"
                             type="text"
+                            autoComplete="off"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Email Address"
@@ -141,7 +147,8 @@ function UserForm({route, method}) {
                             fullWidth
                             variant="outlined"
                             className="form-input"
-                            type="text"
+                            type="password"
+                            autoComplete="new-password" 
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
