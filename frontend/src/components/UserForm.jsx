@@ -85,7 +85,7 @@ function UserForm({route, method}) {
                             fullWidth
                             variant="outlined"
                             className="form-input"
-                            type="text"
+                            type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"
@@ -141,7 +141,7 @@ function UserForm({route, method}) {
                             fullWidth
                             variant="outlined"
                             className="form-input"
-                            type="text"
+                            type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Password"

@@ -21,6 +21,15 @@ function NavBar() {
                             >
                             Logout
                     </Button>
+                    <Button
+                            variant='contained'
+                            size="small"
+                            component={Link}
+                            to={'/rides/create'}
+                            sx={{ backgroundColor: 'black'}}
+                            >
+                            Post a Ride
+                    </Button>
                 </Toolbar>
             </Container>
         </AppBar>
