@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import api from '../../api'
 import { ACCESS_TOKEN } from '../../constants'
 import ChatBox from '../../components/ChatBox'
+import NavBar from '../../components/NavBar'
 
 
 import Container from '@mui/material/Container'
@@ -115,6 +116,8 @@ function RideDetail() {
         : ''
 
     return (
+        <>
+        <NavBar></NavBar>
         <Container maxWidth="md" sx={{ paddingTop: '50px', paddingBottom: '50px' }}>
             <Box sx={{
                 borderRadius: '3',
@@ -253,7 +256,7 @@ function RideDetail() {
                 </div>
             </Box>
         </Container>
-    )
+    </>)
 }
 
 export default RideDetail
