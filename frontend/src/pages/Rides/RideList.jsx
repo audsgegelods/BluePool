@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 
+import NavBar from '../../components/NavBar'
+
 function RideList() {
     const [rides, setRides] = useState([])
     const [loading, setLoading] = useState(false)
@@ -59,6 +61,8 @@ function RideList() {
     }
 
     return (
+        <>
+        <NavBar></NavBar>
         <Container maxWidth="lg" sx={{ paddingTop: '50px' }}>
             <Box sx={{
                 borderRadius: "3",
@@ -137,6 +141,7 @@ function RideList() {
                 )}
             </Box>
         </Container>
+        </>
     )
 }
 
